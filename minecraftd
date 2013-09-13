@@ -1,0 +1,24 @@
+#!/bin/bash
+
+. /etc/conf.d/minecraft || echo "can't source /etc/conf.d/minecraft"
+
+[ -z "$1" ] && echo "No servername specified" && exit 1
+SRVNAME="$1"
+
+if [ ! -d "$_SRVDIR/$SRVNAME" ]; then
+	mkdir $_SRVDIR/$SRVNAME
+	chown $MCUSER:$MCUSER $_SRVDIR/$SRVNAME 
+	echo "Created server dir:  $_SRVDIR/$SRVNAME"
+fi
+
+#Link common files
+cd $_SRVDIR/common
+for f in *; do
+	if [ ! -f "$_SRVDIR/$SRVNAME/$f" ]; then
+		echo "Created link $_SRVDIR/$SRVNAME/$f"
+		ln -s "$_SRVDIR/common/$f" "$_SRVDIR/$SRVNAME/$f" 
+	fi
+done
+
+cd $_SRVDIR/$SRVNAME
+screen -dmS minecraft-$SRVNAME su minecraft -c "PATH=/opt/java/bin/:/usr/bin/:$PATH java -Xmx${MAXHEAP} -Xms${MINHEAP} -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=${THREADS} -XX:+AggressiveOpts -jar ${_SRVDIR}/${SRVNAME}/${SERVERJAR} nogui"
