@@ -2,6 +2,9 @@
 
 . /etc/conf.d/minecraft || echo "can't source /etc/conf.d/minecraft"
 
-cd $_SRVDIR
+[ -z "$1" ] && echo "No servername specified" && exit 1
+SRVNAME="$1"
+
+cd $_SRVDIR/$SRVNAME
 echo "If the next command executes correctly, then something is wrong with screen."
-su minecraft -c "PATH=/opt/java/bin/:/usr/bin/:$PATH java -Xmx${MAXHEAP} -Xms${MINHEAP} -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=${THREADS} -XX:+AggressiveOpts -jar ${_SRVDIR}/${SERVERJAR} nogui"
+su minecraft -c "PATH=/opt/java/bin/:/usr/bin/:$PATH java -Xmx${MAXHEAP} -Xms${MINHEAP} -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=${THREADS} -XX:+AggressiveOpts -jar ${_SRVDIR}/$SRVNAME/${SERVERJAR} nogui"
