@@ -3,7 +3,6 @@
 pkgname=minecraft-server-multi
 pkgver=1.6.2
 pkgrel=2
-epoch=1
 pkgdesc="Minecraft server unit files, script, and jar. Supports multiple server instances"
 arch=(any)
 url="http://minecraft.net/"
@@ -26,13 +25,13 @@ noextract=("minecraft_server.$pkgver.jar")
 
 md5sums=('39df9f29e6904ea7b351ffb4fe949881'
          '5e2f43167da374d2d725b19b6908fc9b'
-         '64e793deed5856a970e92d0942168cfd'
+         'db48217ba514b93944d1fbebba358ae2'
          '161cfb8db6a1ac7c33be0184afc91865'
-         '66cb4167175bf9b8cfd2d3a2b6ff4115'
+         '5858c1de4241758c958b7770b2861cbe'
          'b42821ecf13c4976d443e38cbb6f4a52'
-         '6bc437f4a96bf225187e24b7d72317ed'
-	 'SKIP'
-	 'SKIP')
+         '1482589f4dfe8ef8b4463c4bcffc1a85'
+         '8676d2f38c62e1c17c0c1e61dd16d2e0'
+         '14929cc78fc684dfe5d8e4275b5eaa90')
 
 package() {
   install -Dm744 "$srcdir/minecraftd" "$pkgdir/usr/bin/minecraftd"

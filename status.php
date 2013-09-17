@@ -109,13 +109,41 @@ foreach(getEnabledServers() as $server){
     }
     catch( MinecraftQueryException $e )
     {
-        $querydata = $e->getMessage( );
+        $extra .= "<br/>" . $e->getMessage( ) . "<br/>";
     }
   }
-  
+
+  if(file_exists("/srv/minecraft/.rotateinfo-$server")){
+    $info = file("/srv/minecraft/.rotateinfo-$server");
+
+    $last = intval((time() - intval($info[2])) / 60);
+    
+    preg_match("/([\d.]*)(\w?)/", $info[3], $parts);
+    $keys = array("h" => 3600, "m" => 60, "s" => 1);
+    $tmp = intval($info[2]) + ($parts[1] * $keys[$parts[2]]);
+
+    $next = intval(($tmp - time()) / 60);
+
+    if($next >= 0){
+
+      $extra .= "<br/><b>Map rotation is used</b><br/>";
+      $extra .= "Switched to " . $info[1] . " from " . $info[0] . " $last minutes ago <br/>";
+      $extra .= "Will switch to next one in $next minutes <br/>";
+    
+      if(file_exists("/srv/minecraft/$server/worlds.conf")){
+	$extra .= "Worlds: " . implode(", ", file("/srv/minecraft/$server/worlds.conf")) . "<br />";
+      }
+    }else{
+      $extra .= "<br/><b>Warning: Change time is in the past! Check world changing script!!!</b><br/>";
+    }
+  }
+
   if($config->get("white-list") == "true"){
     $extra .= "<br /><b>White listing is in effect</b>  ";
-    $extra .= implode(", ", @file("/srv/minecraft/$server/white-list.txt"));
+    
+    $wplayers = @file("/srv/minecraft/$server/white-list.txt");
+    if(!empty($wplayers))
+      $extra .= "<br /><i>Allowed players: </i>" . implode(", ", $wplayers);
     $extra .= "<br />";
   }
 

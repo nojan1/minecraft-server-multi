@@ -1,7 +1,6 @@
 [Unit]
 Description=Minecraft world rotation
 After=minecraftd@.service
-Requires=minecraftd@.service
 
 [Service]
 ExecStart=/usr/bin/minecraft-worldrotate.sh %I
