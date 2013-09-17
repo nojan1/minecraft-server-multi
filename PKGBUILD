@@ -27,9 +27,9 @@ md5sums=('39df9f29e6904ea7b351ffb4fe949881'
          '5e2f43167da374d2d725b19b6908fc9b'
          'db48217ba514b93944d1fbebba358ae2'
          '161cfb8db6a1ac7c33be0184afc91865'
-         '5858c1de4241758c958b7770b2861cbe'
+         'a5b8429c2829b6c2255371dec6601740'
          'b42821ecf13c4976d443e38cbb6f4a52'
-         '1482589f4dfe8ef8b4463c4bcffc1a85'
+         '64aa876a3acc4ccec532e741cf1d7967'
          '8676d2f38c62e1c17c0c1e61dd16d2e0'
          '14929cc78fc684dfe5d8e4275b5eaa90')
 

@@ -113,8 +113,8 @@ foreach(getEnabledServers() as $server){
     }
   }
 
-  if(file_exists("/srv/minecraft/.rotateinfo-$server")){
-    $info = file("/srv/minecraft/.rotateinfo-$server");
+  if(file_exists("/srv/minecraft/rotateinfo-$server")){
+    $info = file("/srv/minecraft/rotateinfo-$server");
 
     $last = intval((time() - intval($info[2])) / 60);
     

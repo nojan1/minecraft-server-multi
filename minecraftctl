@@ -105,7 +105,7 @@ fi
 
 case "$1" in
   attach)
-   mv_attach
+   mc_attach
    ;;
   backup)
     mc_backup
@@ -128,7 +128,7 @@ case "$1" in
     ;;
 
   *)
-    echo "Usage: $0 <WORLDNAME> {backup|status|command \"server command\"}"
+    echo "Usage: $0 <WORLDNAME> {attach|backup|status|command \"server command\"}"
     exit 1
   ;;
 esac
