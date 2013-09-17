@@ -1,5 +1,38 @@
 <?php
 
+date_default_timezone_set('Europe/Stockholm');
+
+class ConfigParser {
+  function __construct($configPath){
+    $this->settings = array();
+    if(file_exists($configPath)){
+      foreach(file($configPath) as $line){
+	$parts = array_map("trim", explode("=", $line));
+	if(count($parts) == 2){
+	  $this->settings[ $parts[0] ] = str_replace('"', "", $parts[1]);
+	}
+      }
+    }else{
+      $this->settings = null;
+    }
+  }
+
+  function isValidConfig(){
+    return $this->settings != null;
+  }
+
+  function get($key){
+    if($this->settings == null)
+      return "";
+
+    if(array_key_exists($key, $this->settings))
+      return $this->settings[$key];
+    else
+      return "";
+  }
+
+}
+
 function getEnabledServers(){
   $servers = array(); 
   
@@ -10,17 +43,6 @@ function getEnabledServers(){
   }
   
   return $servers;
-}
-
-function getPort($srvname){
-  if(!file_exists("/srv/minecraft/$srvname/server.properties"))
-    return "<!-- NO PROPERTIES FILE -->";
-
-  $config = file_get_contents("/srv/minecraft/$srvname/server.properties");
-  if(!preg_match("/server-port=(\d*)/", $config, $matches))
-    return "<!-- NO MATCH -->";
-
-  return $matches[1];
 }
 
 function isOnline($srvname){
@@ -36,11 +58,22 @@ function isOnline($srvname){
 <html>
    <head>
      <title>Minecraft server status</title>
+<script type="text/javascript">
+function toggle(name){
+  elem = document.getElementById(name);
+  if(elem.style.display == "none"){
+    elem.style.display = "block";
+  }else{
+    elem.style.display = "none";
+  }
+}
+</script>
    </head>
    <body>
     <h1>Status report</h1>
     <table cellspacing="5">
       <tr>
+        <th></th>
         <th>Server name</th>
         <th>Address</th>
         <th>Port</th>
@@ -50,12 +83,69 @@ function isOnline($srvname){
 <?php
 
 foreach(getEnabledServers() as $server){
+  $config = new ConfigParser("/srv/minecraft/$server/server.properties");
+
+  $extra = null;
+  if(isOnline($server) && $config->get("enable-query") == "true" && $config->get("query.port") != ""){
+    include_once "PHP-Minecraft-Query/MinecraftQuery.class.php";
+    
+    $Query = new MinecraftQuery( );
+
+    try
+    {
+      $Query->Connect( 'localhost', intval($config->get("query.port")) );
+
+      $info = $Query->GetInfo();
+      $extra .= "<b>Query data</b><br />";
+      $extra .= "Description: " . $info["HostName"] . "<br />";
+      $extra .= "Server software: " . $info["Software"] . " " . $info["Version"] . "<br />";
+      $extra .= "Map name: " . $info["Map"] . "<br />";
+      $extra .= "Game type: " . $info["GameType"] . "<br />";
+      $extra .= "Player count: " . $info["Players"] . "/" . $info["MaxPlayers"] . "<br />";
+
+      $players = $Query->GetPlayers();
+      if(!empty($players))
+	$extra .= "<br />Players: ". implode(",", $players) . "<br/>";
+    }
+    catch( MinecraftQueryException $e )
+    {
+        $querydata = $e->getMessage( );
+    }
+  }
+  
+  if($config->get("white-list") == "true"){
+    $extra .= "<br /><b>White listing is in effect</b>  ";
+    $extra .= implode(", ", @file("/srv/minecraft/$server/white-list.txt"));
+    $extra .= "<br />";
+  }
+
+  if(file_exists("overview/". $server . "-" . $config->get("level-name"))){
+    $finfo = stat("overview/". $server . "-" . $config->get("level-name"));
+    $rendertime =  date("Y-m-d H:i:s", $finfo["mtime"]);
+    $extra .= "<br /><a href=\"overview/\" target=\"_blank\"><b>World overview</b></a> (Rendered $rendertime)<br />";
+  }
+
   echo "<tr>";
+  echo "<td>";
+  
+  if($extra){
+    echo "<a href=\"#\" onClick=\"toggle('row-$server');\"><b>+</b></a>";
+  }
+
+  echo "</td>";
   echo "<td>$server</td>";
   echo "<td>nyclon.crabdance.com (" . $_SERVER["SERVER_ADDR"] . ")</td>";
-  echo "<td>" . getPort($server) . "</td>";
+  echo "<td>" . $config->get("server-port") . "</td>";
   echo "<td><font color=\"" . (isOnline($server) ? "green\">ONLINE" : "red\">OFFLINE") . "</font></td>";
   echo "</tr>";
+
+  if($extra){
+    echo "<tr><td></td><td colspan=\"4\"> <div id=\"row-$server\" style=\"display:none;\">";
+    if($extra)
+      echo $extra;
+
+    echo "<br /></div></td></tr>";
+  }
 }
 
 ?>

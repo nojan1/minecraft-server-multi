@@ -2,7 +2,7 @@
 
 pkgname=minecraft-server-multi
 pkgver=1.6.2
-pkgrel=1
+pkgrel=2
 epoch=1
 pkgdesc="Minecraft server unit files, script, and jar. Supports multiple server instances"
 arch=(any)
@@ -19,7 +19,9 @@ source=(https://s3.amazonaws.com/Minecraft.Download/versions/$pkgver/minecraft_s
         minecraftd@.service
 	minecraftctl
 	conf.minecraft
-	status.php)
+	status.php
+	minecraft-worldrotate@.service
+	minecraft-worldrotate.sh)
 noextract=("minecraft_server.$pkgver.jar")  
 
 md5sums=('39df9f29e6904ea7b351ffb4fe949881'
@@ -28,16 +30,20 @@ md5sums=('39df9f29e6904ea7b351ffb4fe949881'
          '161cfb8db6a1ac7c33be0184afc91865'
          '66cb4167175bf9b8cfd2d3a2b6ff4115'
          'b42821ecf13c4976d443e38cbb6f4a52'
-         '6bc437f4a96bf225187e24b7d72317ed')
+         '6bc437f4a96bf225187e24b7d72317ed'
+	 'SKIP'
+	 'SKIP')
 
 package() {
   install -Dm744 "$srcdir/minecraftd" "$pkgdir/usr/bin/minecraftd"
   #install -Dm744 "$srcdir/minecraftd-diag" "$pkgdir/usr/bin/minecraftd-diag"
   install -Dm744 "$srcdir/minecraftctl" "$pkgdir/usr/bin/minecraftctl"
+  install -Dm744 "$srcdir/minecraft-worldrotate.sh" "$pkgdir/usr/bin/minecraft-worldrotate.sh"
   install -Dm644 "$srcdir/status.php" "$pkgdir/usr/share/minecraft-server/example/status.php"
   
   install -Dm644 "$srcdir/minecraft_server.$pkgver".jar "$pkgdir/srv/minecraft/common/minecraft_server.jar"
   install -Dm644 "$srcdir/minecraftd@.service" "$pkgdir/usr/lib/systemd/system/minecraftd@.service"
+  install -Dm644 "$srcdir/minecraft-worldrotate@.service" "$pkgdir/usr/lib/systemd/system/minecraft-worldrotate@.service"
   install -Dm644 "$srcdir/conf.minecraft" "$pkgdir/etc/conf.d/minecraft"
 
   install -d "$pkgdir/srv/minecraft/backup"
