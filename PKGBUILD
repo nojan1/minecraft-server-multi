@@ -24,8 +24,8 @@ source=(https://s3.amazonaws.com/Minecraft.Download/versions/$pkgver/minecraft_s
 noextract=("minecraft_server.$pkgver.jar")  
 
 md5sums=('09f2c2ec89a0a3e7ef2ce0711f33106f'
-         '5e2f43167da374d2d725b19b6908fc9b'
-         'db48217ba514b93944d1fbebba358ae2'
+         'ce39b2612c536acc1c61d31cbcb9bbab'
+         '9a17d3bdf37698c14d0348d011e3a7a1'
          '161cfb8db6a1ac7c33be0184afc91865'
          'a5b8429c2829b6c2255371dec6601740'
          'b42821ecf13c4976d443e38cbb6f4a52'
