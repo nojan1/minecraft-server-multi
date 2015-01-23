@@ -2,7 +2,7 @@
 
 pkgname=minecraft-server-multi
 pkgver=1.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Minecraft server unit files, script, and jar. Supports multiple server instances"
 arch=(any)
 url="http://minecraft.net/"

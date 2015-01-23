@@ -5,6 +5,9 @@
 [ -z "$1" ] && echo "No servername specified" && exit 1
 SRVNAME="$1"
 
+#Source server.conf if exists
+[ -f "$_SRVDIR/$SRVNAME/server.conf" ] && source "$_SRVDIR/$SRVNAME/server.conf"
+
 cd $_SRVDIR/$SRVNAME
 echo "If the next command executes correctly, then something is wrong with screen."
 su minecraft -c "PATH=/opt/java/bin/:/usr/bin/:$PATH java -Xmx${MAXHEAP} -Xms${MINHEAP} -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=${THREADS} -XX:+AggressiveOpts -jar ${_SRVDIR}/$SRVNAME/${SERVERJAR} nogui"
