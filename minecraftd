@@ -20,5 +20,10 @@ for f in *; do
 	fi
 done
 
-cd $_SRVDIR/$SRVNAME
-screen -dmS minecraft-$SRVNAME su minecraft -c "PATH=/opt/java/bin/:/usr/bin/:$PATH java -Xmx${MAXHEAP} -Xms${MINHEAP} -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=${THREADS} -XX:+AggressiveOpts -jar ${_SRVDIR}/${SRVNAME}/${SERVERJAR} nogui"
+#Source server.conf if exists
+[ -f "$_SRVDIR/$SRVNAME/server.conf" ] && source "$_SRVDIR/$SRVNAME/server.conf"
+
+if [ -z "$INHIBITSTART" ]; then
+	cd $_SRVDIR/$SRVNAME
+	screen -dmS minecraft-$SRVNAME su minecraft -c "PATH=/opt/java/bin/:/usr/bin/:$PATH java -Xmx${MAXHEAP} -Xms${MINHEAP} -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalPacing -XX:ParallelGCThreads=${THREADS} -XX:+AggressiveOpts -jar ${_SRVDIR}/${SRVNAME}/${SERVERJAR} nogui"
+fi
