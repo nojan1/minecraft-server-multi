@@ -1,7 +1,7 @@
 # Maintainer: Niklas Hedlund <nojan1989@gmail.com>
 
 pkgname=minecraft-server-multi
-pkgver=1.8.7
+pkgver=1.9.4
 pkgrel=1
 pkgdesc="Minecraft server unit files, script, and jar. Supports multiple server instances"
 arch=(any)
@@ -23,7 +23,7 @@ source=(https://s3.amazonaws.com/Minecraft.Download/versions/$pkgver/minecraft_s
 	minecraft-worldrotate.sh)
 noextract=("minecraft_server.$pkgver.jar")  
 
-md5sums=('eca401ff4f8466645c222dce9471df66'
+md5sums=('292feb3085809e714da2ca75514b9d5b'
          'ce39b2612c536acc1c61d31cbcb9bbab'
          '9a17d3bdf37698c14d0348d011e3a7a1'
          '161cfb8db6a1ac7c33be0184afc91865'
